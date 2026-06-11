@@ -1,3 +1,0 @@
-module HiveEngine {
-    header "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngine.build/include/HiveEngine-Swift.h"
-}
