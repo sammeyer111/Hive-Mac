@@ -5,13 +5,13 @@ import AVFoundation
 /// the one macOS system sound we keep) and the background music are synthesized
 /// at runtime by `GameAudio` — there are no audio asset files to bundle.
 enum SoundPlayer {
-    /// Gates sound effects.
-    static var enabled = true
+    /// Overall output level (0…1). Effects play at master × sfx; music at
+    /// master × music. A volume of 0 is silence (the old "off").
+    static var masterVolume: Float = 1 { didSet { GameAudio.shared.setMaster(masterVolume) } }
+    static var sfxVolume: Float = 0.8 { didSet { GameAudio.shared.setSFX(sfxVolume) } }
+    static var musicVolume: Float = 0.6 { didSet { GameAudio.shared.setMusic(musicVolume) } }
 
-    /// Gates background music, independently of effects.
-    static var musicEnabled = true {
-        didSet { GameAudio.shared.setMusicEnabled(musicEnabled) }
-    }
+    private static var effectsAudible: Bool { masterVolume > 0.001 && sfxVolume > 0.001 }
 
     enum Event {
         case place, move, gameStart, win, lose, draw
@@ -24,10 +24,13 @@ enum SoundPlayer {
     }
 
     static func play(_ event: Event) {
-        guard enabled else { return }
+        guard effectsAudible else { return }
         if event == .place {
             // The one sound we keep from macOS, as requested.
-            (NSSound(named: "Tink")?.copy() as? NSSound)?.play()
+            if let sound = NSSound(named: "Tink")?.copy() as? NSSound {
+                sound.volume = masterVolume * sfxVolume
+                sound.play()
+            }
             return
         }
         GameAudio.shared.playEffect(event)
@@ -48,6 +51,9 @@ private final class GameAudio {
 
     private let engine = AVAudioEngine()
     private let musicNode = AVAudioPlayerNode()
+    private let musicReverb = AVAudioUnitReverb()
+    private let sfxReverb = AVAudioUnitReverb()
+    private let sfxMixer = AVAudioMixerNode()
     private var sfxPool: [AVAudioPlayerNode] = []
     private var poolIndex = 0
     private let format: AVAudioFormat
@@ -55,21 +61,43 @@ private final class GameAudio {
     private let queue = DispatchQueue(label: "hive.audio", qos: .userInitiated)
 
     private var running = false
-    private var musicEnabled = true
     private var desiredScene: SoundPlayer.MusicScene = .none
     private var liveScene: SoundPlayer.MusicScene = .none
     private var effectCache: [String: AVAudioPCMBuffer] = [:]
     private var musicCache: [String: AVAudioPCMBuffer] = [:]
+
+    // User-set levels (0…1) and the per-scene base, plus the transient ducking
+    // factor. Effective music level = base × musicVolume × duckFactor.
+    private var masterVolume: Float = 1
+    private var sfxVolume: Float = 0.8
+    private var musicVolume: Float = 0.6
     private var musicBaseVolume: Float = 0
+    private var duckFactor: Float = 1
 
     private init() {
         format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 2)!
+
+        // Music runs through a roomy hall; effects through a light room. The
+        // reverb tails are what stop the synth from sounding dry and chiptune.
         engine.attach(musicNode)
-        engine.connect(musicNode, to: engine.mainMixerNode, format: format)
+        engine.attach(musicReverb)
+        musicReverb.loadFactoryPreset(.largeHall)
+        musicReverb.wetDryMix = 38
+        engine.connect(musicNode, to: musicReverb, format: format)
+        engine.connect(musicReverb, to: engine.mainMixerNode, format: format)
+
+        // The 8 effect voices fan into a mixer first — an effect node has only
+        // one input bus, so the pool can't connect to the reverb directly.
+        engine.attach(sfxReverb)
+        sfxReverb.loadFactoryPreset(.mediumRoom)
+        sfxReverb.wetDryMix = 16
+        engine.attach(sfxMixer)
+        engine.connect(sfxMixer, to: sfxReverb, format: format)
+        engine.connect(sfxReverb, to: engine.mainMixerNode, format: format)
         for _ in 0..<8 {
             let node = AVAudioPlayerNode()
             engine.attach(node)
-            engine.connect(node, to: engine.mainMixerNode, format: format)
+            engine.connect(node, to: sfxMixer, format: format)
             sfxPool.append(node)
         }
     }
@@ -83,9 +111,24 @@ private final class GameAudio {
             sfxPool.forEach { $0.play() }
             musicNode.play()
             running = true
+            _applyLevels()
         } catch {
             running = false
         }
+    }
+
+    /// Pushes the current volumes onto the graph: master on the main mixer,
+    /// sfx on the effects submix, music folded into the music node.
+    private func _applyLevels() {
+        guard running else { return }
+        engine.mainMixerNode.outputVolume = masterVolume
+        sfxMixer.outputVolume = sfxVolume
+        _updateMusicVolume()
+    }
+
+    private func _updateMusicVolume() {
+        guard running else { return }
+        musicNode.volume = musicBaseVolume * musicVolume * duckFactor
     }
 
     // MARK: Public (queue-hopping) API
@@ -101,12 +144,9 @@ private final class GameAudio {
         }
     }
 
-    func setMusicEnabled(_ on: Bool) {
-        queue.async {
-            self.musicEnabled = on
-            self._applyScene()
-        }
-    }
+    func setMaster(_ v: Float) { queue.async { self.masterVolume = v; self._applyLevels() } }
+    func setSFX(_ v: Float) { queue.async { self.sfxVolume = v; self._applyLevels() } }
+    func setMusic(_ v: Float) { queue.async { self.musicVolume = v; self._updateMusicVolume() } }
 
     // MARK: Effects
 
@@ -139,69 +179,73 @@ private final class GameAudio {
     private func renderEffect(_ event: SoundPlayer.Event) -> AVAudioPCMBuffer {
         switch event {
         case .move:
-            // Soft wooden tap.
-            return buffer(seconds: 0.14) { buf in
-                addNote(&buf, midi: 55, start: 0, dur: 0.11, gain: 0.5,
-                        wave: .triangle, attack: 0.002, release: 0.09)
+            // Soft, rounded wooden tap.
+            return buffer(seconds: 0.22) { buf in
+                addNote(&buf, midi: 52, start: 0, dur: 0.18, gain: 0.42,
+                        voice: .soft, attack: 0.004, release: 0.16)
             }
         case .gameStart:
-            // Two-note rise with a little shimmer.
-            return buffer(seconds: 0.5) { buf in
-                addNote(&buf, midi: 67, start: 0.0, dur: 0.2, gain: 0.34, wave: .sine)
-                addNote(&buf, midi: 67, start: 0.0, dur: 0.2, gain: 0.16, wave: .triangle)
-                addNote(&buf, midi: 74, start: 0.13, dur: 0.3, gain: 0.34, wave: .sine)
-                addNote(&buf, midi: 74, start: 0.13, dur: 0.3, gain: 0.16, wave: .triangle)
+            // A soft, slow chord that swells in gently — easy to miss, not a
+            // fanfare. Long attacks keep it from sounding like a chime.
+            return buffer(seconds: 1.1) { buf in
+                addNote(&buf, midi: 55, start: 0.0, dur: 1.0, gain: 0.1, voice: .pad,
+                        attack: 0.3, release: 0.55)
+                addNote(&buf, midi: 60, start: 0.05, dur: 0.95, gain: 0.085, voice: .pad,
+                        attack: 0.32, release: 0.55)
+                addNote(&buf, midi: 64, start: 0.1, dur: 0.9, gain: 0.085, voice: .pad,
+                        attack: 0.35, release: 0.55)
             }
         case .win:
-            // Bright major arpeggio C-E-G-C.
-            return buffer(seconds: 0.75) { buf in
+            // Glowing major arpeggio C-E-G-C with a pad swell underneath.
+            return buffer(seconds: 1.1) { buf in
+                addNote(&buf, midi: 60, start: 0.0, dur: 1.0, gain: 0.12, voice: .pad,
+                        attack: 0.06, release: 0.6)
                 let notes = [72, 76, 79, 84]
                 for (i, m) in notes.enumerated() {
-                    let t = Double(i) * 0.09
-                    addNote(&buf, midi: m, start: t, dur: 0.4 - t * 0.2, gain: 0.4, wave: .sine)
-                    addNote(&buf, midi: m, start: t, dur: 0.4 - t * 0.2, gain: 0.18, wave: .triangle)
+                    let t = Double(i) * 0.1
+                    addNote(&buf, midi: m, start: t, dur: 0.6 - t * 0.2, gain: 0.34, voice: .lead)
                 }
             }
         case .lose:
-            // Slow descending minor figure.
-            return buffer(seconds: 0.9) { buf in
+            // Slow descending minor figure, soft and warm.
+            return buffer(seconds: 1.1) { buf in
                 let notes = [57, 53, 48]
                 for (i, m) in notes.enumerated() {
-                    addNote(&buf, midi: m, start: Double(i) * 0.2, dur: 0.45,
-                            gain: 0.36, wave: .softSquare, attack: 0.01, release: 0.25)
+                    addNote(&buf, midi: m, start: Double(i) * 0.22, dur: 0.6,
+                            gain: 0.32, voice: .pad, attack: 0.02, release: 0.35)
                 }
             }
         case .draw:
             // Two neutral tones a fourth apart.
-            return buffer(seconds: 0.55) { buf in
-                addNote(&buf, midi: 72, start: 0.0, dur: 0.28, gain: 0.32, wave: .sine)
-                addNote(&buf, midi: 67, start: 0.16, dur: 0.34, gain: 0.32, wave: .sine)
+            return buffer(seconds: 0.7) { buf in
+                addNote(&buf, midi: 72, start: 0.0, dur: 0.34, gain: 0.3, voice: .pad)
+                addNote(&buf, midi: 67, start: 0.18, dur: 0.42, gain: 0.3, voice: .pad)
             }
         case .click:
-            // Crisp, quiet UI tick.
-            return buffer(seconds: 0.04) { buf in
-                addNote(&buf, midi: 96, start: 0, dur: 0.028, gain: 0.16,
-                        wave: .sine, attack: 0.001, release: 0.02)
+            // Soft, quiet UI tip.
+            return buffer(seconds: 0.09) { buf in
+                addNote(&buf, midi: 81, start: 0, dur: 0.06, gain: 0.13,
+                        voice: .soft, attack: 0.002, release: 0.05)
             }
         case .undoAsk:
             // Gentle rising double-blip: a request arrived.
-            return buffer(seconds: 0.35) { buf in
-                addNote(&buf, midi: 76, start: 0.0, dur: 0.12, gain: 0.26, wave: .sine)
-                addNote(&buf, midi: 81, start: 0.14, dur: 0.16, gain: 0.26, wave: .sine)
+            return buffer(seconds: 0.45) { buf in
+                addNote(&buf, midi: 76, start: 0.0, dur: 0.16, gain: 0.24, voice: .lead)
+                addNote(&buf, midi: 81, start: 0.15, dur: 0.22, gain: 0.24, voice: .lead)
             }
         case .undoApplied:
             // Quick descending "rewind".
-            return buffer(seconds: 0.3) { buf in
-                addNote(&buf, midi: 72, start: 0.0, dur: 0.1, gain: 0.28, wave: .triangle)
-                addNote(&buf, midi: 64, start: 0.08, dur: 0.16, gain: 0.28, wave: .triangle)
+            return buffer(seconds: 0.4) { buf in
+                addNote(&buf, midi: 72, start: 0.0, dur: 0.14, gain: 0.26, voice: .soft)
+                addNote(&buf, midi: 64, start: 0.09, dur: 0.22, gain: 0.26, voice: .soft)
             }
         case .undoDecline:
-            // Low, short two-pulse buzz.
-            return buffer(seconds: 0.32) { buf in
-                addNote(&buf, midi: 48, start: 0.0, dur: 0.1, gain: 0.3,
-                        wave: .softSquare, attack: 0.004, release: 0.06)
-                addNote(&buf, midi: 48, start: 0.14, dur: 0.12, gain: 0.3,
-                        wave: .softSquare, attack: 0.004, release: 0.06)
+            // Low, short two-pulse — soft, not buzzy.
+            return buffer(seconds: 0.42) { buf in
+                addNote(&buf, midi: 48, start: 0.0, dur: 0.14, gain: 0.28, voice: .bass,
+                        attack: 0.006, release: 0.1)
+                addNote(&buf, midi: 48, start: 0.16, dur: 0.18, gain: 0.28, voice: .bass,
+                        attack: 0.006, release: 0.12)
             }
         case .place:
             return buffer(seconds: 0.01) { _ in }  // handled by NSSound; unreachable
@@ -211,7 +255,7 @@ private final class GameAudio {
     // MARK: Music
 
     private func _applyScene() {
-        let target: SoundPlayer.MusicScene = musicEnabled ? desiredScene : .none
+        let target = desiredScene
         guard target != liveScene else { return }
         if target == .none {
             if running { musicNode.stop(); musicNode.play() }
@@ -228,7 +272,8 @@ private final class GameAudio {
         }()
         musicNode.stop()
         musicBaseVolume = (target == .menu) ? 0.5 : 0.26
-        musicNode.volume = musicBaseVolume
+        duckFactor = 1
+        _updateMusicVolume()
         musicNode.scheduleBuffer(buffer, at: nil, options: .loops, completionHandler: nil)
         musicNode.play()
         liveScene = target
@@ -253,11 +298,11 @@ private final class GameAudio {
             for (ci, chord) in chords.enumerated() {
                 let start = Double(ci) * chordDur
                 // Warm sustained bass root + the chord pad.
-                addNote(&buf, midi: chord[0] - 12, start: start, dur: chordDur, gain: 0.09,
-                        wave: .sine, attack: 0.4, release: 0.85)
+                addNote(&buf, midi: chord[0] - 12, start: start, dur: chordDur, gain: 0.08,
+                        voice: .bass, attack: 0.5, release: 0.9)
                 for m in chord {
-                    addNote(&buf, midi: m, start: start, dur: chordDur, gain: 0.1,
-                            wave: .sine, attack: 0.45, release: 0.9)
+                    addNote(&buf, midi: m, start: start, dur: chordDur, gain: 0.09,
+                            voice: .pad, attack: 0.55, release: 1.0)
                 }
                 guard arpeggio else { continue }
                 let ascending = ci % 2 == 0
@@ -266,8 +311,8 @@ private final class GameAudio {
                 while t < chordDur - 0.1 {
                     let pos = step % chord.count
                     let idx = ascending ? pos : chord.count - 1 - pos
-                    addNote(&buf, midi: chord[idx] + 12, start: start + t, dur: 0.34, gain: 0.08,
-                            wave: .triangle, attack: 0.01, release: 0.2)
+                    addNote(&buf, midi: chord[idx] + 12, start: start + t, dur: 0.5, gain: 0.06,
+                            voice: .lead, attack: 0.02, release: 0.4)
                     t += 0.4
                     step += 1
                 }
@@ -279,33 +324,57 @@ private final class GameAudio {
     /// clearly without a jarring volume jump.
     private func duckMusic(for seconds: Double) {
         guard liveScene != .none else { return }
-        let base = musicBaseVolume
-        musicNode.volume = base * 0.35
+        duckFactor = 0.35
+        _updateMusicVolume()
         let steps = 5
         for i in 1...steps {
             queue.asyncAfter(deadline: .now() + seconds + Double(i) * 0.08) { [weak self] in
                 guard let self, self.liveScene != .none else { return }
-                self.musicNode.volume = base * (0.35 + 0.65 * Float(i) / Float(steps))
+                self.duckFactor = 0.35 + 0.65 * Float(i) / Float(steps)
+                self._updateMusicVolume()
             }
         }
     }
 
     // MARK: DSP primitives
 
-    private enum Wave { case sine, triangle, softSquare }
+    /// Instrument timbres built as additive harmonic stacks. Slightly inharmonic
+    /// multipliers make the partials beat gently against each other for a richer,
+    /// less "pure oscillator" sound. No saw/square anywhere.
+    private enum Voice { case pad, lead, soft, bass }
+
+    private func partials(_ voice: Voice) -> [(mult: Double, amp: Double)] {
+        switch voice {
+        case .pad:  return [(1.0, 1.0), (2.003, 0.5), (3.0, 0.22), (4.005, 0.1), (6.0, 0.04)]
+        case .lead: return [(1.0, 1.0), (2.002, 0.32), (3.001, 0.13), (5.0, 0.05)]
+        case .soft: return [(1.0, 1.0), (2.0, 0.14), (3.0, 0.045)]
+        case .bass: return [(1.0, 1.0), (2.001, 0.28), (3.0, 0.07)]
+        }
+    }
 
     /// Allocates a silent stereo buffer, lets `build` add notes into a mono
-    /// scratch track, then mirrors it to both channels with soft clipping.
+    /// scratch track, then warms it with a one-pole low-pass and soft limiter
+    /// before mirroring to both channels.
     private func buffer(seconds: Double, build: (inout [Float]) -> Void) -> AVAudioPCMBuffer {
         let count = Int(seconds * sampleRate)
         var mono = [Float](repeating: 0, count: count)
         build(&mono)
+
+        // Gentle low-pass (~4 kHz): rolls off the brittle highs that read as
+        // chiptune, leaving a rounder tone.
+        let alpha: Float = 0.42
+        var y: Float = 0
+        for i in 0..<count {
+            y += alpha * (mono[i] - y)
+            mono[i] = y
+        }
+
         let buf = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(count))!
         buf.frameLength = AVAudioFrameCount(count)
         let left = buf.floatChannelData![0]
         let right = buf.floatChannelData![1]
         for i in 0..<count {
-            let v = tanh(mono[i] * 1.1)  // gentle limiter to avoid harsh clipping
+            let v = tanh(mono[i] * 1.1)  // soft limiter
             left[i] = v
             right[i] = v
         }
@@ -316,40 +385,38 @@ private final class GameAudio {
         440.0 * pow(2.0, (Double(midi) - 69.0) / 12.0)
     }
 
-    private func waveform(_ wave: Wave, phase: Double) -> Double {
-        switch wave {
-        case .sine:
-            return sin(2 * .pi * phase)
-        case .triangle:
-            return 2 * abs(2 * (phase - floor(phase + 0.5))) - 1
-        case .softSquare:
-            return tanh(sin(2 * .pi * phase) * 2.2)
-        }
-    }
-
     private func addNote(_ buf: inout [Float], midi: Int, start: Double, dur: Double,
-                         gain: Double, wave: Wave, attack: Double = 0.01,
-                         release: Double = 0.14) {
-        let freq = midiToFreq(midi)
+                         gain: Double, voice: Voice, attack: Double = 0.012,
+                         release: Double = 0.18) {
+        let f0 = midiToFreq(midi)
         let s0 = Int(start * sampleRate)
         let n = Int(dur * sampleRate)
         guard n > 0 else { return }
         let atk = max(1, Int(attack * sampleRate))
         let rel = max(1, Int(release * sampleRate))
-        var phase = 0.0
+        let parts = partials(voice)
+        let norm = parts.reduce(0.0) { $0 + $1.amp }
+        var phases = [Double](repeating: 0, count: parts.count)
+        let twoPi = 2.0 * Double.pi
         for i in 0..<n {
             let idx = s0 + i
             if idx < 0 || idx >= buf.count { continue }
-            let amp: Double
+            // Raised-cosine attack/release: click-free, smoother than linear.
+            let env: Double
             if i < atk {
-                amp = Double(i) / Double(atk)
+                env = 0.5 - 0.5 * cos(Double.pi * Double(i) / Double(atk))
             } else if i > n - rel {
-                amp = max(0, Double(n - i) / Double(rel))
+                let r = Double(n - i) / Double(rel)
+                env = max(0, 0.5 - 0.5 * cos(Double.pi * r))
             } else {
-                amp = 1
+                env = 1
             }
-            phase += freq / sampleRate
-            buf[idx] += Float(waveform(wave, phase: phase) * gain * amp)
+            var sample = 0.0
+            for p in 0..<parts.count {
+                phases[p] += twoPi * f0 * parts[p].mult / sampleRate
+                sample += sin(phases[p]) * parts[p].amp
+            }
+            buf[idx] += Float(sample / norm * gain * env)
         }
     }
 }

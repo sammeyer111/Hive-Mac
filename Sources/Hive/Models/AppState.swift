@@ -7,7 +7,6 @@ import HiveEngine
 final class AppState: ObservableObject {
     enum Route: Equatable {
         case menu
-        case editProfile
         case createGame
         case joinGame
         case singlePlayer
@@ -17,6 +16,8 @@ final class AppState: ObservableObject {
     }
 
     @Published var route: Route = .menu { didSet { refreshMusicScene() } }
+    /// Drives the Settings sheet, which can be opened from anywhere.
+    @Published var showSettings = false
     @Published var host: HostSession?
     @Published var joiner: JoinSession?
     @Published var match: MatchSession? { didSet { refreshMusicScene() } }
@@ -27,10 +28,16 @@ final class AppState: ObservableObject {
             PrimaryButtonStyle.themeAccent = theme.accent
         }
     }
-    @Published var soundsEnabled: Bool {
+    @Published var masterVolume: Double {
         didSet {
-            UserDefaults.standard.set(soundsEnabled, forKey: "hiveSounds")
-            SoundPlayer.enabled = soundsEnabled
+            UserDefaults.standard.set(masterVolume, forKey: "hiveMasterVol")
+            SoundPlayer.masterVolume = Float(masterVolume)
+        }
+    }
+    @Published var sfxVolume: Double {
+        didSet {
+            UserDefaults.standard.set(sfxVolume, forKey: "hiveSfxVol")
+            SoundPlayer.sfxVolume = Float(sfxVolume)
         }
     }
     @Published var pieceStyle: PieceStyle {
@@ -39,10 +46,10 @@ final class AppState: ObservableObject {
     @Published var material: TileMaterial {
         didSet { UserDefaults.standard.set(material.rawValue, forKey: "hiveMaterial") }
     }
-    @Published var musicEnabled: Bool {
+    @Published var musicVolume: Double {
         didSet {
-            UserDefaults.standard.set(musicEnabled, forKey: "hiveMusic")
-            SoundPlayer.musicEnabled = musicEnabled
+            UserDefaults.standard.set(musicVolume, forKey: "hiveMusicVol")
+            SoundPlayer.musicVolume = Float(musicVolume)
         }
     }
 
@@ -58,12 +65,18 @@ final class AppState: ObservableObject {
 
     init() {
         themeID = UserDefaults.standard.string(forKey: "hiveTheme") ?? "honey"
-        soundsEnabled = UserDefaults.standard.object(forKey: "hiveSounds") as? Bool ?? true
         pieceStyle = PieceStyle(rawValue: UserDefaults.standard.string(forKey: "hivePieceStyle") ?? "") ?? .modern
         material = TileMaterial(rawValue: UserDefaults.standard.string(forKey: "hiveMaterial") ?? "") ?? .flat
-        musicEnabled = UserDefaults.standard.object(forKey: "hiveMusic") as? Bool ?? true
-        SoundPlayer.enabled = soundsEnabled
-        SoundPlayer.musicEnabled = musicEnabled
+        // Volumes, migrating from the old on/off switches (off -> 0).
+        let ud = UserDefaults.standard
+        let oldSounds = ud.object(forKey: "hiveSounds") as? Bool ?? true
+        let oldMusic = ud.object(forKey: "hiveMusic") as? Bool ?? true
+        masterVolume = ud.object(forKey: "hiveMasterVol") as? Double ?? 1.0
+        sfxVolume = ud.object(forKey: "hiveSfxVol") as? Double ?? (oldSounds ? 0.8 : 0.0)
+        musicVolume = ud.object(forKey: "hiveMusicVol") as? Double ?? (oldMusic ? 0.6 : 0.0)
+        SoundPlayer.masterVolume = Float(masterVolume)
+        SoundPlayer.sfxVolume = Float(sfxVolume)
+        SoundPlayer.musicVolume = Float(musicVolume)
         PrimaryButtonStyle.themeAccent = Theme.named(themeID).accent
         storeSubscription = bridge(store)
         updaterSubscription = bridge(updater)

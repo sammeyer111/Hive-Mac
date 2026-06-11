@@ -3,18 +3,31 @@ import AppKit
 
 struct HiveApp: App {
     @StateObject private var app = AppState()
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     var body: some Scene {
         WindowGroup("Hive") {
             RootView()
                 .environmentObject(app)
-                .frame(minWidth: 860, minHeight: 640)
+                .frame(minWidth: 640, minHeight: 560)
                 .preferredColorScheme(.dark)
                 .onAppear {
                     NSApplication.shared.setActivationPolicy(.regular)
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 }
         }
+        // Free resize down to the content minimum and up to any size; the
+        // window's last frame is remembered between launches.
+        .defaultSize(width: 980, height: 720)
+        .windowResizability(.contentMinSize)
+    }
+}
+
+/// Closing the (single) window quits the app, as the user expects on a
+/// one-window game.
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        true
     }
 }
 
@@ -33,6 +46,10 @@ struct RootView: View {
                 .transition(.opacity.combined(with: .scale(scale: 0.985)))
         }
         .animation(.easeInOut(duration: 0.3), value: screenKey)
+        .sheet(isPresented: $app.showSettings) {
+            SettingsView(isFirstRun: false)
+                .environmentObject(app)
+        }
     }
 
     /// Identity for the current screen; a change drives the crossfade above.
@@ -46,7 +63,7 @@ struct RootView: View {
     @ViewBuilder
     private var screen: some View {
         if app.needsProfile {
-            ProfileEditorView(isFirstRun: true)
+            SettingsView(isFirstRun: true)
         } else if let match = app.match {
             GameView(match: match)
                 .id(ObjectIdentifier(match))
@@ -55,7 +72,6 @@ struct RootView: View {
         } else {
             switch app.route {
             case .menu: MenuView()
-            case .editProfile: ProfileEditorView(isFirstRun: false)
             case .createGame: CreateGameView()
             case .joinGame: JoinGameView()
             case .singlePlayer: SinglePlayerView()

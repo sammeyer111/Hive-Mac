@@ -26,14 +26,14 @@ struct MenuView: View {
                             .foregroundStyle(.secondary)
                     }
                     Button {
-                        app.route = .editProfile
+                        app.showSettings = true
                     } label: {
-                        Image(systemName: "pencil.circle.fill")
+                        Image(systemName: "gearshape.fill")
                             .font(.title2)
                             .foregroundStyle(.secondary)
                     }
                     .buttonStyle(.plain)
-                    .help("Edit profile")
+                    .help("Settings")
                 }
                 .padding(18)
                 .background(.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 18))
