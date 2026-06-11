@@ -32,15 +32,36 @@ final class MatchSession: ObservableObject {
         case failed
     }
 
+    /// Pending take-back negotiation (peer matches only).
+    enum UndoState: Equatable {
+        case none
+        case requestedByMe
+        case requestedByThem
+        case declined
+    }
+
     @Published private(set) var game: GameState
     @Published private(set) var endReason: EndReason?
     @Published var rematchState: RematchState = .none
     @Published private(set) var lastMove: Move?
+    /// The most-recent move removed by the last take-back, with `undoTick`
+    /// bumped each time — the board view animates this move sliding back.
+    @Published private(set) var lastUndoneMove: Move?
+    @Published private(set) var undoTick = 0
     @Published private(set) var opponentLeft = false
     @Published private(set) var gameGeneration = 0
     @Published private(set) var myColor: PlayerColor
     @Published private(set) var notations: [String] = []
     @Published var reconnectState: ReconnectState = .idle
+    @Published var undoState: UndoState = .none
+
+    /// True for single-player matches (the opponent is the local AI), which
+    /// use instant local undo instead of the peer request/accept flow.
+    let vsBot: Bool
+    /// One undo request per turn: set when I send a request, cleared whenever a
+    /// move is applied (i.e. the turn advances).
+    private var undoRequestedThisTurn = false
+    private var undoFlashTask: Task<Void, Never>?
 
     /// Separate observable so the per-second tick doesn't invalidate (and
     /// redraw) the board canvas — only the banners observe this.
@@ -78,7 +99,7 @@ final class MatchSession: ObservableObject {
 
     init(peer: PeerChannel, start: MatchStart, myColor: PlayerColor, isHost: Bool,
          myProfile: ProfileSnapshot, opponentProfile: ProfileSnapshot, store: PlayerStore,
-         resumeKey: String) {
+         resumeKey: String, vsBot: Bool = false) {
         self.peer = peer
         self.config = start.config
         self.game = GameState(config: start.config, startingPlayer: start.startingPlayer)
@@ -89,6 +110,7 @@ final class MatchSession: ObservableObject {
         self.opponentProfile = opponentProfile
         self.store = store
         self.resumeKey = resumeKey
+        self.vsBot = vsBot
         wireChannel()
         restartClock()
         SoundPlayer.play(.gameStart)
@@ -140,6 +162,101 @@ final class MatchSession: ObservableObject {
         peer.send(.move(move, turnIndex: turnIndex))
         playMoveSound(move)
         afterTurnAdvanced()
+    }
+
+    // MARK: Undo / take-back
+
+    /// Whether the undo control should be offered right now.
+    var canUndo: Bool { vsBot ? canUndoSolo : canRequestUndo }
+
+    /// Single-player: any move on the board can be taken back.
+    private var canUndoSolo: Bool {
+        vsBot && !game.movesPlayed.isEmpty
+    }
+
+    /// Peer match: a request may only be sent in the window after my own move
+    /// (while it's the opponent's turn), once per turn, with none pending.
+    private var canRequestUndo: Bool {
+        !vsBot && endReason == nil && !game.movesPlayed.isEmpty
+            && game.currentPlayer != myColor
+            && undoState == .none && !undoRequestedThisTurn
+    }
+
+    /// Driven by the Undo button. Branches on match type.
+    func undo() {
+        if vsBot { undoSolo() } else { requestUndo() }
+    }
+
+    /// Instant, unlimited take-back vs the AI: rewind to the most recent
+    /// position where it was my turn (undoing the bot's reply and my move),
+    /// and resync the bot so it doesn't replay the discarded line.
+    private func undoSolo() {
+        guard canUndoSolo else { return }
+        var target = game.movesPlayed.count - 1
+        while target > 0 {
+            let prefix = Rules.replay(
+                game.movesPlayed.prefix(target), config: config, startingPlayer: startingPlayer)
+            if prefix.currentPlayer == myColor { break }
+            target -= 1
+        }
+        applyUndo(toMoveCount: target)
+        peer.send(.undoSync(toMoveCount: target))
+    }
+
+    private func requestUndo() {
+        guard canRequestUndo else { return }
+        undoState = .requestedByMe
+        undoRequestedThisTurn = true
+        peer.send(.undoRequest)
+    }
+
+    /// The opponent answers my (their peer's) take-back request.
+    func respondToUndo(accept: Bool) {
+        guard undoState == .requestedByThem else { return }
+        peer.send(.undoResponse(accepted: accept))
+        if accept {
+            performPeerUndo()
+        } else {
+            undoState = .none
+        }
+    }
+
+    /// Both peers revert exactly the last move (the requester's), returning the
+    /// turn to the requester.
+    private func performPeerUndo() {
+        guard !game.movesPlayed.isEmpty else { undoState = .none; return }
+        applyUndo(toMoveCount: game.movesPlayed.count - 1)
+    }
+
+    /// Rebuilds the position at `n` moves and refreshes all derived state.
+    private func applyUndo(toMoveCount n: Int) {
+        let target = max(0, min(n, game.movesPlayed.count))
+        // The topmost move being removed is the one the board animates backward.
+        let removedTop = target < game.movesPlayed.count ? game.movesPlayed.last : nil
+        game = Rules.replay(
+            game.movesPlayed.prefix(target), config: config, startingPlayer: startingPlayer)
+        notations = Array(notations.prefix(target))
+        lastMove = game.movesPlayed.last
+        endReason = nil
+        undoState = .none
+        undoRequestedThisTurn = false
+        legalMovesCache = nil
+        if let removedTop {
+            lastUndoneMove = removedTop
+            undoTick &+= 1
+        }
+        SoundPlayer.play(.undoApplied)
+        restartClock()
+    }
+
+    private func flashUndoDeclined() {
+        undoState = .declined
+        undoFlashTask?.cancel()
+        undoFlashTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: 2_200_000_000)
+            guard let self, !Task.isCancelled, self.undoState == .declined else { return }
+            self.undoState = .none
+        }
     }
 
     func resign() {
@@ -232,7 +349,9 @@ final class MatchSession: ObservableObject {
         case .move(let move, let turnIndex):
             guard endReason == nil, game.currentPlayer != myColor,
                   turnIndex == game.movesPlayed.count else {
-                if turnIndex < game.movesPlayed.count { return }  // stale duplicate
+                // The local AI is trusted: a bot reply that crossed an undo
+                // arrives out of step and is simply dropped, never a desync.
+                if vsBot || turnIndex < game.movesPlayed.count { return }  // stale duplicate
                 netlog("match: rejected remote move (turn \(turnIndex), have \(game.movesPlayed.count)) — closing")
                 desync()
                 return
@@ -273,6 +392,23 @@ final class MatchSession: ObservableObject {
             if endReason != nil {
                 beginRematch(start)
             }
+        case .undoRequest:
+            // Valid only when the peer just moved (it's now my turn) and there
+            // is a move of theirs to take back.
+            guard endReason == nil, !vsBot, game.currentPlayer == myColor,
+                  !game.movesPlayed.isEmpty, undoState == .none else { return }
+            undoState = .requestedByThem
+            SoundPlayer.play(.undoAsk)
+        case .undoResponse(let accepted):
+            guard undoState == .requestedByMe else { return }
+            if accepted {
+                performPeerUndo()
+            } else {
+                flashUndoDeclined()
+                SoundPlayer.play(.undoDecline)
+            }
+        case .undoSync:
+            break  // host/bot-direction only; never received by the app side
         case .bye:
             if endReason == nil {
                 // A deliberate mid-game quit counts as resignation.
@@ -301,6 +437,8 @@ final class MatchSession: ObservableObject {
         statsRecorded = false
         lastMove = nil
         notations = []
+        undoState = .none
+        undoRequestedThisTurn = false
         gameGeneration += 1
         legalMovesCache = nil
         netlog("match: rematch started (game \(gameGeneration + 1)), my color \(myColor.rawValue)")
@@ -311,6 +449,9 @@ final class MatchSession: ObservableObject {
     // MARK: Turn clock
 
     private func afterTurnAdvanced() {
+        // A new move closes any open take-back window from the previous turn.
+        undoRequestedThisTurn = false
+        if undoState != .declined { undoState = .none }
         if let outcome = game.outcome {
             stopClock()
             endReason = .outcome(outcome)

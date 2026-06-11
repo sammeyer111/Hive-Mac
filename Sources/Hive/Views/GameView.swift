@@ -18,24 +18,27 @@ struct GameView: View {
     var body: some View {
         HStack(spacing: 0) {
             VStack(spacing: 0) {
-                HStack(spacing: 10) {
-                    PlayerBanner(
-                        profile: match.opponentProfile,
-                        color: match.myColor.opponent,
-                        isActive: match.game.currentPlayer == match.myColor.opponent
-                            && match.game.outcome == nil && match.endReason == nil,
-                        clock: match.clock,
-                        showClock: match.game.currentPlayer == match.myColor.opponent,
-                        headToHead: headToHeadText)
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) { showMoves.toggle() }
-                    } label: {
-                        Image(systemName: "list.bullet.rectangle")
-                            .font(.title3)
-                            .foregroundStyle(showMoves ? app.theme.accent : .secondary)
+                VStack(spacing: 6) {
+                    HStack(spacing: 10) {
+                        PlayerBanner(
+                            profile: match.opponentProfile,
+                            color: match.myColor.opponent,
+                            isActive: match.game.currentPlayer == match.myColor.opponent
+                                && match.game.outcome == nil && match.endReason == nil,
+                            clock: match.clock,
+                            showClock: match.game.currentPlayer == match.myColor.opponent,
+                            headToHead: headToHeadText)
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) { showMoves.toggle() }
+                        } label: {
+                            Image(systemName: "list.bullet.rectangle")
+                                .font(.title3)
+                                .foregroundStyle(showMoves ? app.theme.accent : .secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Move list")
                     }
-                    .buttonStyle(.plain)
-                    .help("Move list")
+                    OpponentHandTray(match: match)
                 }
                 .padding(.horizontal, 18)
                 .padding(.vertical, 10)
@@ -43,6 +46,7 @@ struct GameView: View {
                 BoardCanvas(match: match, selection: $selection)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .overlay(alignment: .top) { turnRibbon }
+                    .overlay(alignment: .bottom) { undoBanner }
                     .overlay { gameOverOverlay }
 
                 myControls
@@ -95,6 +99,18 @@ struct GameView: View {
                     Button("Pass Turn") { match.play(.pass) }
                         .buttonStyle(PrimaryButtonStyle())
                 }
+                if match.canUndo {
+                    Button {
+                        match.undo()
+                    } label: {
+                        Label(match.vsBot ? "Undo" : "Ask Undo", systemImage: "arrow.uturn.backward")
+                    }
+                    .buttonStyle(SecondaryButtonStyle())
+                    .help(match.vsBot
+                          ? "Take back your last move"
+                          : "Ask \(match.opponentProfile.name) to take back your last move")
+                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                }
                 if match.endReason == nil {
                     Button("Resign") { showResignConfirm = true }
                         .buttonStyle(SecondaryButtonStyle())
@@ -106,6 +122,7 @@ struct GameView: View {
                         .buttonStyle(SecondaryButtonStyle())
                 }
             }
+            .animation(.spring(response: 0.3, dampingFraction: 0.82), value: match.canUndo)
         }
     }
 
@@ -128,6 +145,54 @@ struct GameView: View {
                     .animation(.easeInOut(duration: 0.2), value: match.isMyTurn)
             }
         }
+    }
+
+    // MARK: Undo / take-back banner
+
+    @ViewBuilder
+    private var undoBanner: some View {
+        Group {
+            switch match.undoState {
+            case .requestedByMe:
+                undoChip {
+                    Label("Take-back requested…", systemImage: "hourglass")
+                        .font(.callout.bold())
+                }
+            case .requestedByThem:
+                VStack(spacing: 10) {
+                    Text("\(match.opponentProfile.name) wants to take back their last move.")
+                        .font(.callout.bold())
+                        .multilineTextAlignment(.center)
+                    HStack(spacing: 12) {
+                        Button("Allow") { match.respondToUndo(accept: true) }
+                            .buttonStyle(PrimaryButtonStyle(color: Color(hex: "43A047")))
+                        Button("Decline") { match.respondToUndo(accept: false) }
+                            .buttonStyle(SecondaryButtonStyle())
+                    }
+                }
+                .padding(18)
+                .background(.black.opacity(0.82), in: RoundedRectangle(cornerRadius: 18))
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(.white.opacity(0.15)))
+            case .declined:
+                undoChip {
+                    Label("Take-back declined", systemImage: "xmark.circle")
+                        .font(.callout.bold())
+                }
+            case .none:
+                EmptyView()
+            }
+        }
+        .padding(.bottom, 14)
+        .transition(.move(edge: .bottom).combined(with: .opacity))
+        .animation(.spring(response: 0.34, dampingFraction: 0.82), value: match.undoState)
+    }
+
+    private func undoChip<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+        content()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 9)
+            .background(.black.opacity(0.78), in: Capsule())
+            .overlay(Capsule().stroke(.white.opacity(0.14)))
     }
 
     // MARK: Game over / reconnect overlay
@@ -392,5 +457,61 @@ struct HandTray: View {
             if case .place(let piece, _) = move { result.insert(piece.kind) }
         }
         return result
+    }
+}
+
+// MARK: - Opponent's unplayed pieces
+
+/// A compact, read-only readout of the pieces the opponent still has in hand.
+struct OpponentHandTray: View {
+    @EnvironmentObject var app: AppState
+    @ObservedObject var match: MatchSession
+
+    private var opponentColor: PlayerColor { match.myColor.opponent }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Text("In hand")
+                .font(.caption2.bold())
+                .foregroundStyle(.tertiary)
+            ForEach(kinds, id: \.self) { kind in
+                let count = match.game.handCount(opponentColor, kind)
+                HStack(spacing: 3) {
+                    glyph(kind)
+                    Text("\(count)")
+                        .font(.caption2.monospacedDigit().bold())
+                        .foregroundStyle(count > 0 ? .secondary : .tertiary)
+                }
+                .padding(.horizontal, 6)
+                .padding(.vertical, 4)
+                .background(.white.opacity(0.05), in: RoundedRectangle(cornerRadius: 8))
+                .opacity(count > 0 ? 1 : 0.4)
+                .help("\(kind.displayName): \(count) left")
+                .animation(.easeInOut(duration: 0.2), value: count)
+            }
+            Spacer()
+        }
+    }
+
+    private var kinds: [PieceKind] {
+        PieceKind.trayOrder.filter { match.config.pieceCounts.keys.contains($0) }
+    }
+
+    @ViewBuilder
+    private func glyph(_ kind: PieceKind) -> some View {
+        if let image = PieceArt.shared.image(kind: kind, color: opponentColor, style: app.pieceStyle) {
+            image
+                .resizable()
+                .scaledToFit()
+                .frame(width: 18, height: 18)
+                .padding(1)
+                .background(
+                    app.pieceStyle == .carbon
+                        ? (opponentColor == .white ? app.theme.tileLight : app.theme.tileDark)
+                        : .clear,
+                    in: RoundedRectangle(cornerRadius: 4))
+        } else {
+            Text(kind.emoji).font(.system(size: 16))
+        }
     }
 }

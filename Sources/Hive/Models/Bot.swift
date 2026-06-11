@@ -65,6 +65,7 @@ final class BotChannel: PeerChannel {
 
     private var game: GameState
     private var botColor: PlayerColor
+    private var startingPlayer: PlayerColor
     private let difficulty: BotDifficulty
     private var generation = 0
     // One engine instance: its transposition table carries across moves.
@@ -75,6 +76,7 @@ final class BotChannel: PeerChannel {
     init(start: MatchStart, difficulty: BotDifficulty) {
         self.game = GameState(config: start.config, startingPlayer: start.startingPlayer)
         self.botColor = start.yourColor
+        self.startingPlayer = start.startingPlayer
         self.difficulty = difficulty
     }
 
@@ -104,7 +106,17 @@ final class BotChannel: PeerChannel {
         case .rematchStart(let start):
             generation += 1
             game = GameState(config: start.config, startingPlayer: start.startingPlayer)
+            startingPlayer = start.startingPlayer
             botColor = start.yourColor
+            maybeMove()
+        case .undoSync(let count):
+            // The player took a move back; rewind our mirror of the game and
+            // bump the generation so any in-flight search result is discarded.
+            generation += 1
+            let target = max(0, min(count, game.movesPlayed.count))
+            game = Rules.replay(
+                game.movesPlayed.prefix(target),
+                config: game.config, startingPlayer: startingPlayer)
             maybeMove()
         default:
             break  // resign/bye need no reply

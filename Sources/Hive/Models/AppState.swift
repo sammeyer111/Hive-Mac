@@ -16,10 +16,10 @@ final class AppState: ObservableObject {
         case replay(GameRecord)
     }
 
-    @Published var route: Route = .menu
+    @Published var route: Route = .menu { didSet { refreshMusicScene() } }
     @Published var host: HostSession?
     @Published var joiner: JoinSession?
-    @Published var match: MatchSession?
+    @Published var match: MatchSession? { didSet { refreshMusicScene() } }
 
     @Published var themeID: String {
         didSet {
@@ -39,6 +39,12 @@ final class AppState: ObservableObject {
     @Published var material: TileMaterial {
         didSet { UserDefaults.standard.set(material.rawValue, forKey: "hiveMaterial") }
     }
+    @Published var musicEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(musicEnabled, forKey: "hiveMusic")
+            SoundPlayer.musicEnabled = musicEnabled
+        }
+    }
 
     var theme: Theme { Theme.named(themeID) }
 
@@ -55,11 +61,19 @@ final class AppState: ObservableObject {
         soundsEnabled = UserDefaults.standard.object(forKey: "hiveSounds") as? Bool ?? true
         pieceStyle = PieceStyle(rawValue: UserDefaults.standard.string(forKey: "hivePieceStyle") ?? "") ?? .modern
         material = TileMaterial(rawValue: UserDefaults.standard.string(forKey: "hiveMaterial") ?? "") ?? .flat
+        musicEnabled = UserDefaults.standard.object(forKey: "hiveMusic") as? Bool ?? true
         SoundPlayer.enabled = soundsEnabled
+        SoundPlayer.musicEnabled = musicEnabled
         PrimaryButtonStyle.themeAccent = Theme.named(themeID).accent
         storeSubscription = bridge(store)
         updaterSubscription = bridge(updater)
         updater.checkOnLaunch()
+        refreshMusicScene()
+    }
+
+    /// Calmer loop in-game, fuller loop everywhere else.
+    private func refreshMusicScene() {
+        SoundPlayer.setMusicScene(match != nil ? .game : .menu)
     }
 
     /// Views observe AppState but read state that lives on nested
@@ -134,7 +148,8 @@ final class AppState: ObservableObject {
             myProfile: profile.snapshot,
             opponentProfile: difficulty.profile,
             store: store,
-            resumeKey: "")
+            resumeKey: "",
+            vsBot: true)
         session.onLeave = { [weak self] in
             self?.match = nil
             self?.route = .menu

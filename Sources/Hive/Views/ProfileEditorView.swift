@@ -120,6 +120,13 @@ struct ProfileEditorView: View {
                 .toggleStyle(.switch)
                 .controlSize(.small)
                 .padding(.top, 10)
+
+                Toggle(isOn: $app.musicEnabled) {
+                    Text("MUSIC").font(.caption.bold()).foregroundStyle(.secondary)
+                }
+                .toggleStyle(.switch)
+                .controlSize(.small)
+                .padding(.top, 4)
             }
             .frame(width: 440)
 

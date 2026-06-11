@@ -24,6 +24,20 @@ public enum Rules {
         return next
     }
 
+    /// Rebuilds a position from scratch by replaying a move prefix from the
+    /// initial state. Used to take back moves (undo): every game state is a
+    /// pure function of its move list, so this avoids an inverse-move routine.
+    public static func replay<S: Sequence>(
+        _ moves: S, config: GameConfig, startingPlayer: PlayerColor
+    ) -> GameState where S.Element == Move {
+        var state = GameState(config: config, startingPlayer: startingPlayer)
+        for move in moves {
+            guard let next = applyUnchecked(move, to: state) else { break }
+            state = next
+        }
+        return state
+    }
+
     /// Applies a move without legality validation — for callers that already
     /// hold a move from `legalMoves` (bot search, replays). Returns nil only
     /// on structural mismatch (piece not where the move says).

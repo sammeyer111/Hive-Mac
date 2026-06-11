@@ -28,24 +28,40 @@ struct RootView: View {
                 startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
 
-            if app.needsProfile {
-                ProfileEditorView(isFirstRun: true)
-            } else if let match = app.match {
-                GameView(match: match)
-                    .id(ObjectIdentifier(match))
-            } else if app.host != nil {
-                LobbyView()
-            } else {
-                switch app.route {
-                case .menu: MenuView()
-                case .editProfile: ProfileEditorView(isFirstRun: false)
-                case .createGame: CreateGameView()
-                case .joinGame: JoinGameView()
-                case .singlePlayer: SinglePlayerView()
-                case .stats: StatsView()
-                case .history: HistoryView()
-                case .replay(let record): ReplayView(record: record)
-                }
+            screen
+                .id(screenKey)
+                .transition(.opacity.combined(with: .scale(scale: 0.985)))
+        }
+        .animation(.easeInOut(duration: 0.3), value: screenKey)
+    }
+
+    /// Identity for the current screen; a change drives the crossfade above.
+    private var screenKey: String {
+        if app.needsProfile { return "profile" }
+        if app.match != nil { return "match" }
+        if app.host != nil { return "lobby" }
+        return "\(app.route)"
+    }
+
+    @ViewBuilder
+    private var screen: some View {
+        if app.needsProfile {
+            ProfileEditorView(isFirstRun: true)
+        } else if let match = app.match {
+            GameView(match: match)
+                .id(ObjectIdentifier(match))
+        } else if app.host != nil {
+            LobbyView()
+        } else {
+            switch app.route {
+            case .menu: MenuView()
+            case .editProfile: ProfileEditorView(isFirstRun: false)
+            case .createGame: CreateGameView()
+            case .joinGame: JoinGameView()
+            case .singlePlayer: SinglePlayerView()
+            case .stats: StatsView()
+            case .history: HistoryView()
+            case .replay(let record): ReplayView(record: record)
             }
         }
     }
@@ -89,8 +105,13 @@ struct PrimaryButtonStyle: ButtonStyle {
             .background(
                 (color ?? Self.themeAccent).opacity(configuration.isPressed ? 0.7 : 1),
                 in: Capsule())
-            .scaleEffect(configuration.isPressed ? 0.97 : 1)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.93 : 1)
+            .shadow(color: (color ?? Self.themeAccent).opacity(configuration.isPressed ? 0 : 0.35),
+                    radius: configuration.isPressed ? 1 : 7, y: configuration.isPressed ? 0 : 3)
+            .animation(.spring(response: 0.28, dampingFraction: 0.55), value: configuration.isPressed)
+            .onChange(of: configuration.isPressed) { pressed in
+                if pressed { SoundPlayer.play(.click) }
+            }
     }
 }
 
@@ -102,7 +123,10 @@ struct SecondaryButtonStyle: ButtonStyle {
             .padding(.horizontal, 24)
             .padding(.vertical, 11)
             .background(.white.opacity(configuration.isPressed ? 0.08 : 0.14), in: Capsule())
-            .scaleEffect(configuration.isPressed ? 0.97 : 1)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .scaleEffect(configuration.isPressed ? 0.93 : 1)
+            .animation(.spring(response: 0.28, dampingFraction: 0.55), value: configuration.isPressed)
+            .onChange(of: configuration.isPressed) { pressed in
+                if pressed { SoundPlayer.play(.click) }
+            }
     }
 }

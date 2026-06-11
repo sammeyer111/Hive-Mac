@@ -25,6 +25,9 @@ struct BoardCanvas: View {
 
     // Move animation.
     @State private var animationStart: Date?
+    // Take-back animation: the undone piece slides back to where it came from.
+    @State private var undoAnimStart: Date?
+    @State private var prevMoveCount = 0
 
     private static let animationDuration: TimeInterval = 0.28
 
@@ -35,7 +38,7 @@ struct BoardCanvas: View {
     var body: some View {
         GeometryReader { proxy in
             let geometry = layout(in: proxy.size)
-            TimelineView(.animation(minimumInterval: 1.0 / 60.0, paused: animationStart == nil)) { timeline in
+            TimelineView(.animation(minimumInterval: 1.0 / 60.0, paused: animationStart == nil && undoAnimStart == nil)) { timeline in
                 Canvas { context, _ in
                     draw(in: &context, geometry: geometry, now: timeline.date)
                 }
@@ -48,8 +51,12 @@ struct BoardCanvas: View {
             .gesture(magnification)
         }
         .overlay(alignment: .bottomTrailing) { viewControls }
+        .onAppear { prevMoveCount = match.game.movesPlayed.count }
         .onChange(of: match.game.movesPlayed.count) { count in
-            guard count > 0 else { return }
+            defer { prevMoveCount = count }
+            // Only a played move animates forward here; take-backs (which lower
+            // the count) animate via `undoTick` instead.
+            guard count > prevMoveCount, count > 0 else { return }
             animationStart = Date()
             DispatchQueue.main.asyncAfter(deadline: .now() + Self.animationDuration + 0.1) {
                 if let start = animationStart,
@@ -58,8 +65,20 @@ struct BoardCanvas: View {
                 }
             }
         }
+        .onChange(of: match.undoTick) { _ in
+            animationStart = nil
+            undoAnimStart = Date()
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.animationDuration + 0.1) {
+                if let start = undoAnimStart,
+                   Date().timeIntervalSince(start) > Self.animationDuration {
+                    undoAnimStart = nil
+                }
+            }
+        }
         .onChange(of: match.gameGeneration) { _ in
             animationStart = nil
+            undoAnimStart = nil
+            prevMoveCount = match.game.movesPlayed.count
             resetView()
         }
         .padding(8)
@@ -280,6 +299,26 @@ struct BoardCanvas: View {
             }
         }
 
+        // Take-back animation: the undone piece slides back to its origin (or
+        // shrinks away, for an undone placement).
+        var undoing: (piece: Piece, move: Move, t: CGFloat)?
+        if animating == nil, let start = undoAnimStart, let move = match.lastUndoneMove {
+            let t = CGFloat(min(max(now.timeIntervalSince(start) / Self.animationDuration, 0), 1))
+            if t < 1 {
+                switch move {
+                case let .move(pieceID, from, _), let .pillbugMove(_, pieceID, from, _):
+                    if let piece = board.top(at: from), piece.id == pieceID {
+                        params.hiddenTopAt = from
+                        undoing = (piece, move, t)
+                    }
+                case .place(let piece, _):
+                    undoing = (piece, move, t)  // already lifted off the board
+                case .pass:
+                    break
+                }
+            }
+        }
+
         // Dragging hides the piece at its origin; it follows the cursor.
         if let drag, let piece = board.top(at: drag.from) {
             params.hiddenTopAt = drag.from
@@ -314,6 +353,34 @@ struct BoardCanvas: View {
                     &context, piece: animating.piece, at: destCenter,
                     size: geometry.size * (0.4 + 0.6 * eased), theme: theme,
                     opacity: Double(0.3 + 0.7 * eased),
+                    style: app.pieceStyle, material: app.material)
+            case .pass:
+                break
+            }
+        }
+
+        // Reverse animation for a take-back: mirror of the forward case above.
+        if let undoing {
+            let t = undoing.t
+            let eased = 1 - pow(1 - t, 3)  // ease-out
+            switch undoing.move {
+            case .move(_, let from, let to), .pillbugMove(_, _, let from, let to):
+                let fromCenter = geometry.center(of: from)
+                let toCenter = geometry.center(of: to)
+                let point = CGPoint(
+                    x: toCenter.x + (fromCenter.x - toCenter.x) * eased,
+                    y: toCenter.y + (fromCenter.y - toCenter.y) * eased)
+                let lift = 1 + 0.15 * sin(.pi * t)
+                BoardRenderer.drawFloatingPiece(
+                    &context, piece: undoing.piece, at: point,
+                    size: geometry.size * lift, theme: theme,
+                    style: app.pieceStyle, material: app.material)
+            case .place(_, let at):
+                let center = geometry.center(of: at)
+                BoardRenderer.drawFloatingPiece(
+                    &context, piece: undoing.piece, at: center,
+                    size: geometry.size * (0.4 + 0.6 * (1 - eased)), theme: theme,
+                    opacity: Double(0.3 + 0.7 * (1 - eased)),
                     style: app.pieceStyle, material: app.material)
             case .pass:
                 break

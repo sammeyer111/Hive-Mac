@@ -47,9 +47,16 @@ public enum NetMessage: Codable, Sendable {
     case rematchStart(MatchStart)
     /// Host → joiner over a reconnected channel: authoritative game state.
     case resumeState(GameState)
+    /// Ask the opponent to take back the last (the requester's own) move.
+    case undoRequest
+    /// Reply to an `undoRequest`. On `accepted`, both sides revert one move.
+    case undoResponse(accepted: Bool)
+    /// Local single-player only: tell the bot channel to rewind its internal
+    /// state to `toMoveCount` moves (no opponent confirmation involved).
+    case undoSync(toMoveCount: Int)
     case bye
 
-    public static let protocolVersion = 4
+    public static let protocolVersion = 5
 }
 
 public enum NetCodec {
