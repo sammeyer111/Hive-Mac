@@ -1,0 +1,250 @@
+{
+  "": {
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/master.swiftdeps"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/HiveApp.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HiveApp.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HiveApp.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HiveApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HiveApp.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HiveApp.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/AppState.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AppState.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AppState.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AppState~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AppState.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AppState.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Bot.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Bot.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Bot.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Bot~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Bot.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Bot.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/GameAnalysis.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameAnalysis.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameAnalysis.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameAnalysis~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameAnalysis.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameAnalysis.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/MatchSession.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MatchSession.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MatchSession.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MatchSession~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MatchSession.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MatchSession.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/PieceArt.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PieceArt.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PieceArt.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PieceArt~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PieceArt.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PieceArt.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Profile.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Profile.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Profile.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Profile~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Profile.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Profile.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SoundPlayer.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SoundPlayer.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SoundPlayer.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SoundPlayer~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SoundPlayer.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SoundPlayer.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SpectatorSession.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Theme.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Theme.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Theme.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Theme~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Theme.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Theme.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Trainer.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/AISelfTest.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AISelfTest.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AISelfTest.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AISelfTest~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AISelfTest.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AISelfTest.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/Crypto.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Crypto.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Crypto.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Crypto~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Crypto.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Crypto.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/MQTT.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MQTT.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MQTT.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MQTT~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MQTT.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MQTT.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/NetSelfTest.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/NetSelfTest.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/NetSelfTest.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/NetSelfTest~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/NetSelfTest.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/NetSelfTest.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/PeerChannel.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PeerChannel.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PeerChannel.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PeerChannel~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PeerChannel.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PeerChannel.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/Reconnect.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Reconnect.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Reconnect.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Reconnect~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Reconnect.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Reconnect.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/Rendezvous.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Rendezvous.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Rendezvous.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Rendezvous~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Rendezvous.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Rendezvous.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/STUN.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/STUN.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/STUN.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/STUN~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/STUN.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/STUN.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/Sessions.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Sessions.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Sessions.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Sessions~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Sessions.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Sessions.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/UDPChannel.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPChannel.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPChannel.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPChannel~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPChannel.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPChannel.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/UDPSocket.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPSocket.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPSocket.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPSocket~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPSocket.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UDPSocket.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/BoardCanvas.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardCanvas.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardCanvas.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardCanvas~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardCanvas.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardCanvas.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/BoardRenderer.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardRenderer.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardRenderer.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardRenderer~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardRenderer.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/BoardRenderer.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/CreateGameView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/CreateGameView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/CreateGameView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/CreateGameView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/CreateGameView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/CreateGameView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/GameView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/GameView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/HistoryView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HistoryView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HistoryView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HistoryView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HistoryView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/HistoryView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/JoinGameView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/JoinGameView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/JoinGameView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/JoinGameView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/JoinGameView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/JoinGameView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/MenuView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MenuView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MenuView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MenuView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MenuView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MenuView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/MoveListView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MoveListView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MoveListView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MoveListView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MoveListView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MoveListView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/ProfileEditorView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/ProfileEditorView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/ProfileEditorView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/ProfileEditorView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/ProfileEditorView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/ProfileEditorView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/SinglePlayerView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SinglePlayerView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SinglePlayerView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SinglePlayerView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SinglePlayerView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SinglePlayerView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Views/StatsView.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/StatsView.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/StatsView.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/StatsView~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/StatsView.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/StatsView.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/main.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/main.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/main.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/main.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/main.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/DerivedSources/resource_bundle_accessor.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/resource_bundle_accessor.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/resource_bundle_accessor.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/resource_bundle_accessor~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/resource_bundle_accessor.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/resource_bundle_accessor.dia"
+  }
+}

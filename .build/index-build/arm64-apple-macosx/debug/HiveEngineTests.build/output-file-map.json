@@ -1,0 +1,26 @@
+{
+  "": {
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/master.swiftdeps"
+  },
+  "/Users/sammeyer111/Desktop/hive/Tests/HiveEngineTests/HiveAITests.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/HiveAITests.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/HiveAITests.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/HiveAITests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/HiveAITests.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/HiveAITests.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Tests/HiveEngineTests/NotationTests.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/NotationTests.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/NotationTests.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/NotationTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/NotationTests.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/NotationTests.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Tests/HiveEngineTests/RulesTests.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/RulesTests.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/RulesTests.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/RulesTests~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/RulesTests.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/HiveEngineTests.build/RulesTests.dia"
+  }
+}
