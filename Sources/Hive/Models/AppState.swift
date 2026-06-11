@@ -43,6 +43,8 @@ final class AppState: ObservableObject {
     var theme: Theme { Theme.named(themeID) }
 
     let store = PlayerStore()
+    let updater = UpdateChecker()
+    private var updaterSubscription: AnyCancellable?
     private var storeSubscription: AnyCancellable?
     private var hostSubscription: AnyCancellable?
     private var joinerSubscription: AnyCancellable?
@@ -56,6 +58,8 @@ final class AppState: ObservableObject {
         SoundPlayer.enabled = soundsEnabled
         PrimaryButtonStyle.themeAccent = Theme.named(themeID).accent
         storeSubscription = bridge(store)
+        updaterSubscription = bridge(updater)
+        updater.checkOnLaunch()
     }
 
     /// Views observe AppState but read state that lives on nested

@@ -40,6 +40,8 @@ struct MenuView: View {
                 .padding(.top, 36)
             }
 
+            updateBanner
+
             VStack(spacing: 14) {
                 Button("Create Game") { app.route = .createGame }
                     .buttonStyle(PrimaryButtonStyle())
@@ -58,6 +60,40 @@ struct MenuView: View {
 
             Spacer()
             Spacer()
+        }
+    }
+
+    @ViewBuilder
+    private var updateBanner: some View {
+        switch app.updater.status {
+        case .available(let version):
+            HStack(spacing: 10) {
+                Image(systemName: "arrow.down.circle.fill")
+                    .foregroundStyle(app.theme.accent)
+                Text("Version \(version) is available")
+                    .font(.callout)
+                Button("Install & Relaunch") { app.updater.install() }
+                    .buttonStyle(PrimaryButtonStyle())
+                    .controlSize(.small)
+            }
+            .padding(.horizontal, 16).padding(.vertical, 8)
+            .background(.white.opacity(0.08), in: Capsule())
+            .padding(.top, 18)
+        case .downloading, .installing:
+            HStack(spacing: 10) {
+                ProgressView().controlSize(.small)
+                Text(app.updater.status == .downloading ? "Downloading update…" : "Installing — the app will relaunch…")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.top, 18)
+        case .failed(let reason):
+            Label("Update failed: \(reason)", systemImage: "exclamationmark.triangle")
+                .font(.caption)
+                .foregroundStyle(.orange)
+                .padding(.top, 18)
+        case .idle:
+            EmptyView()
         }
     }
 

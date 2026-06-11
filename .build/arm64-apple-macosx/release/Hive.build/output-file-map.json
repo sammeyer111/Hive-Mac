@@ -64,6 +64,12 @@
     "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/arm64-apple-macosx/release/Hive.build/Trainer.swiftdeps",
     "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/arm64-apple-macosx/release/Hive.build/Trainer.dia"
   },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/UpdateChecker.swift": {
+    "object": "/Users/sammeyer111/Desktop/hive/.build/arm64-apple-macosx/release/Hive.build/UpdateChecker.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/arm64-apple-macosx/release/Hive.build/UpdateChecker~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/arm64-apple-macosx/release/Hive.build/UpdateChecker.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/arm64-apple-macosx/release/Hive.build/UpdateChecker.dia"
+  },
   "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/AISelfTest.swift": {
     "object": "/Users/sammeyer111/Desktop/hive/.build/arm64-apple-macosx/release/Hive.build/AISelfTest.swift.o",
     "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/arm64-apple-macosx/release/Hive.build/AISelfTest~partial.swiftmodule",

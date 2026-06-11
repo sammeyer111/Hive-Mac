@@ -58,13 +58,6 @@
     "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SoundPlayer.swiftdeps",
     "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SoundPlayer.dia"
   },
-  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SpectatorSession.swift": {
-    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.d",
-    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.swift.o",
-    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession~partial.swiftmodule",
-    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.swiftdeps",
-    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.dia"
-  },
   "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Theme.swift": {
     "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Theme.d",
     "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Theme.swift.o",
@@ -78,6 +71,13 @@
     "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer~partial.swiftmodule",
     "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer.swiftdeps",
     "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer.dia"
+  },
+  "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/UpdateChecker.swift": {
+    "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UpdateChecker.d",
+    "object": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UpdateChecker.swift.o",
+    "swiftmodule": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UpdateChecker~partial.swiftmodule",
+    "swift-dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UpdateChecker.swiftdeps",
+    "diagnostics": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UpdateChecker.dia"
   },
   "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/AISelfTest.swift": {
     "dependencies": "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AISelfTest.d",

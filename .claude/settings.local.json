@@ -67,7 +67,15 @@
       "Bash(time HIVE_DATA_DIR=/tmp/ht8 .build/release/Hive --train --rounds 1 --games 8 --movetime 200 --threads 8)",
       "Bash(.build/debug/Hive --selftest-art)",
       "Bash(cp ~/Library/\"Application Support\"/HiveP2P/tuned-weights.json /tmp/hivecompat/)",
-      "Bash(HIVE_DATA_DIR=/tmp/hivecompat .build/debug/Hive --train --rounds 1 --games 2 --movetime 40 --threads 4)"
+      "Bash(HIVE_DATA_DIR=/tmp/hivecompat .build/debug/Hive --train --rounds 1 --games 2 --movetime 40 --threads 4)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://api.github.com/repos/sammeyer111/Hive-Mac)",
+      "Bash(curl -s https://api.github.com/repos/sammeyer111/Hive-Mac/releases/latest)",
+      "Bash(grep -n '\\\\$')",
+      "Bash(.build/debug/Hive --selftest-update)",
+      "Bash(defaults read *)",
+      "Bash(python3 -c \"import yaml,sys; yaml.safe_load\\(open\\('.github/workflows/release.yml'\\)\\); print\\('workflow yaml: valid'\\)\")",
+      "Bash(git add *)",
+      "Bash(git commit -q -m 'Add auto-update: GitHub release workflow + in-app updater *)"
     ]
   }
 }

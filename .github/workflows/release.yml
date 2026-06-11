@@ -1,0 +1,42 @@
+# Builds Hive.app and publishes it as a GitHub Release whenever a version tag
+# is pushed. The app's built-in updater checks these releases on launch.
+#
+# To ship an update:
+#   git tag v1.0.1
+#   git push origin v1.0.1
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write   # needed to create the release
+
+jobs:
+  release:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Hive.app
+        run: |
+          # Version comes from the tag (v1.2.3 -> 1.2.3) so the app knows
+          # what it is when comparing against future releases.
+          export HIVE_VERSION="${GITHUB_REF_NAME#v}"
+          ./make-app.sh
+
+      - name: Zip the app
+        run: |
+          # ditto preserves the bundle structure, permissions and signature.
+          ditto -c -k --keepParent Hive.app Hive.zip
+
+      - name: Run tests
+        run: swift test
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Hive.zip
+          generate_release_notes: true

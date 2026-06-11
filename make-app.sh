@@ -5,6 +5,9 @@ cd "$(dirname "$0")"
 
 swift build -c release
 
+# Version: CI passes HIVE_VERSION from the git tag; locally the VERSION file.
+VERSION="${HIVE_VERSION:-$(cat VERSION 2>/dev/null || echo 0.0.0)}"
+
 APP="Hive.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
@@ -19,7 +22,7 @@ cp -R .build/release/Hive_Hive.bundle "$APP/Contents/Resources/"
 #   swift tools/make-icon.swift /tmp/AppIcon.png  (then iconutil, see README)
 cp assets/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 
-cat > "$APP/Contents/Info.plist" <<'PLIST'
+cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -37,7 +40,7 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
+    <string>${VERSION}</string>
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>LSMinimumSystemVersion</key>

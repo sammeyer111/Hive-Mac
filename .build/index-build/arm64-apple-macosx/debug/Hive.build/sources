@@ -6,9 +6,9 @@
 /Users/sammeyer111/Desktop/hive/Sources/Hive/Models/PieceArt.swift
 /Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Profile.swift
 /Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SoundPlayer.swift
-/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SpectatorSession.swift
 /Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Theme.swift
 /Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Trainer.swift
+/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/UpdateChecker.swift
 /Users/sammeyer111/Desktop/hive/Sources/Hive/Net/AISelfTest.swift
 /Users/sammeyer111/Desktop/hive/Sources/Hive/Net/Crypto.swift
 /Users/sammeyer111/Desktop/hive/Sources/Hive/Net/MQTT.swift

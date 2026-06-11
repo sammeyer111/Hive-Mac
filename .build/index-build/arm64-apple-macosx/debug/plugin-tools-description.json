@@ -73,15 +73,15 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SpectatorSession.swift"
-        },
-        {
-          "kind" : "file",
           "name" : "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Theme.swift"
         },
         {
           "kind" : "file",
           "name" : "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Trainer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/UpdateChecker.swift"
         },
         {
           "kind" : "file",
@@ -208,9 +208,9 @@
         "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/PieceArt.swift.o",
         "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Profile.swift.o",
         "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SoundPlayer.swift.o",
-        "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/SpectatorSession.swift.o",
         "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Theme.swift.o",
         "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Trainer.swift.o",
+        "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/UpdateChecker.swift.o",
         "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/AISelfTest.swift.o",
         "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/Crypto.swift.o",
         "/Users/sammeyer111/Desktop/hive/.build/index-build/arm64-apple-macosx/debug/Hive.build/MQTT.swift.o",
@@ -314,9 +314,9 @@
         "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/PieceArt.swift",
         "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Profile.swift",
         "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SoundPlayer.swift",
-        "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SpectatorSession.swift",
         "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Theme.swift",
         "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Trainer.swift",
+        "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/UpdateChecker.swift",
         "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/AISelfTest.swift",
         "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/Crypto.swift",
         "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/MQTT.swift",
@@ -723,9 +723,9 @@
       "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/PieceArt.swift",
       "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Profile.swift",
       "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SoundPlayer.swift",
-      "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SpectatorSession.swift",
       "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Theme.swift",
       "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Trainer.swift",
+      "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/UpdateChecker.swift",
       "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/AISelfTest.swift",
       "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/Crypto.swift",
       "/Users/sammeyer111/Desktop/hive/Sources/Hive/Net/MQTT.swift",
@@ -1107,15 +1107,15 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/SpectatorSession.swift"
-        },
-        {
-          "kind" : "file",
           "name" : "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Theme.swift"
         },
         {
           "kind" : "file",
           "name" : "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/Trainer.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/sammeyer111/Desktop/hive/Sources/Hive/Models/UpdateChecker.swift"
         },
         {
           "kind" : "file",
